@@ -13,12 +13,13 @@ import { useState } from 'react'
 import { db } from '../firebase'
 import firebase from 'firebase'
 import { useCollectionOnce } from 'react-firebase-hooks/firestore'
-// import { useRouter } from 'next/dist/client/router'
+import { useRouter } from 'next/dist/client/router'
 
 
 export default function Home() {
 
   const [session] = useSession();
+  const router = useRouter();
   
   if(!session) return <Login />
 
@@ -26,7 +27,7 @@ export default function Home() {
   const [input,setInput] = useState("");
   const [snapshot] = useCollectionOnce(db.collection("userDocs").doc(session.user.email).collection("docs").orderBy("timestamp", "desc")
   );
-  // const router = useRouter();
+  
   // const { id } = router.query;
 
   const createDocument = () => {
@@ -38,6 +39,8 @@ export default function Home() {
       .add({
         fileName: input,
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      }).then(doc => {
+        router.push(`doc/${doc.id}`)
       });
 
       setInput("");
