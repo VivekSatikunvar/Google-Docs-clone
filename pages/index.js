@@ -13,6 +13,7 @@ import { useState } from 'react'
 import { db } from '../firebase'
 import firebase from 'firebase'
 import { useCollectionOnce } from 'react-firebase-hooks/firestore'
+// import { useRouter } from 'next/dist/client/router'
 
 
 export default function Home() {
@@ -25,6 +26,8 @@ export default function Home() {
   const [input,setInput] = useState("");
   const [snapshot] = useCollectionOnce(db.collection("userDocs").doc(session.user.email).collection("docs").orderBy("timestamp", "desc")
   );
+  // const router = useRouter();
+  // const { id } = router.query;
 
   const createDocument = () => {
     if(!input) return;
@@ -68,8 +71,8 @@ export default function Home() {
       >
         Cancel
       </Button>
-
-      <Button color="blue" onClick={createDocument} ripple='light'>
+{/* && router.push(`/doc/${id}`) */}
+      <Button color="blue" onClick={createDocument } ripple='light'>
         create
       </Button>
     </ModalFooter>
@@ -128,7 +131,6 @@ export default function Home() {
             </div>
         
 
-
       {snapshot?.docs.map((doc) => (
         <DocumentRow
           key={doc.id}
@@ -136,8 +138,6 @@ export default function Home() {
           fileName={doc.data().fileName}
           date={doc.data().timestamp}
         />
-
-
 
       ))}
 
